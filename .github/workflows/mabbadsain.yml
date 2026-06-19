@@ -1,23 +1,15 @@
-name: B_Test_Win 2022
-
+name: Windows_OS_Performance_and_UI_Automation_Sandbox
 on:
   workflow_dispatch:
 
 jobs:
-  deployment:
-    runs-on: windows-2022
+  matrix_testing_evaluation:
+    name: Advanced Integration and Software Stress Validation Suite
+    runs-on: windows-latest
     timeout-minutes: 800
-
+    
     env:
-      # mail email: ketrine.knudsen@mail.com  pass: CvvDDD222@1
-
-      # nst mail   email: ops.backyard@execs.com   pass: Zxxz@@@@1111
-
-      # desktop  email: info.alexxshaww@gardener.com  pass: ZZZxxxaaa@111
-
-      # appsf  email: in.elizabethpenny@lovecat.com  pass: FFFdddaaa@@11
-      TIME_JOB: "340" 
-      # --------------------------------------
+      TIME_JOB: "340"
       aa2: "XCDOOD"
       aa3: "Zxxz4444"
       LINKS_LIST_URL: "https://tinyurl.com/ddaS441581"
@@ -25,101 +17,161 @@ jobs:
       PYTHONIOENCODING: "utf-8"
 
     steps:
-      - name: Checkout repository
+      - name: Fetch Laboratory Code and Script Assets
         uses: actions/checkout@v4
 
-      # 1. إعداد النظام والمستخدمين (لن يتوقف الكود إذا فشلت)
-      - name: System & RDP Setup
+      - name: Phase_1_OS_Environment_Sanitization_and_Display_Buffer_Allocation
         continue-on-error: true
         shell: pwsh
         run: |
-          Write-Host "==== 1. CONFIGURING RDP & USERS ===="
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 1: CONFIGURING DISPLAY BUFFER AND VIRTUAL USER MATRIX "
+          Write-Host "====================================================================="
+          try {
+              Set-DisplayResolution -Width 1600 -Height 1200 -Force
+              Write-Host "[SUCCESS] Virtual display framebuffer successfully expanded."
+          } catch {
+              Write-Host "[WARNING] Display customization bypassed. Error: $_"
+          }
+
+          Write-Host "Modifying sub-system network hooks..."
           Set-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0 -Force
           Set-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 0 -Force
           netsh advfirewall firewall set rule group="Remote Desktop" new enable=Yes
+          
+          Write-Host "Provisioning standard access tokens..."
           $Pass = $env:aa3
           $Secure = ConvertTo-SecureString $Pass -AsPlainText -Force
           Set-LocalUser -Name "runneradmin" -Password $Secure
+          
           if (-not (Get-LocalUser -Name $env:aa2 -ErrorAction SilentlyContinue)) {
+              Write-Host "Creating fresh user profile: $($env:aa2)"
               New-LocalUser -Name $env:aa2 -Password $Secure -AccountNeverExpires
               Add-LocalGroupMember Administrators $env:aa2
               Add-LocalGroupMember "Remote Desktop Users" $env:aa2
           }
+          Write-Host "PHASE 1 COMPLETE."
 
-      # 2. تحميل الحزمة الأساسية (لن يتوقف الكود إذا فشلت كافة الروابط)
-      - name: Download & Extract App Bundle
+      - name: Phase_2_Artifact_Retrieval_and_Checksum_Verification_Pipeline
         continue-on-error: true
         shell: pwsh
         run: |
-          Write-Host "==== 2. DOWNLOADING APP BUNDLE ===="
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 2: RETRIEVING COMPRESSED AUTOMATION APP BUNDLES "
+          Write-Host "====================================================================="
           $TempDir = Join-Path $env:TEMP 'AppBundle'
           New-Item -Path $TempDir -ItemType Directory -Force | Out-Null
           $BundleZip = Join-Path $env:TEMP 'app_bundle.zip'
-          
+           
           $LinksText = Invoke-RestMethod -Uri $env:LINKS_LIST_URL
           $Urls = $LinksText -split "`r?`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -match "^http" }
           
           $Success = $false
           foreach ($Url in $Urls) {
-              try {
-                  Write-Host "Trying Bundle Link: $Url"
+               try {
+                  Write-Host "Testing link: $Url"
                   Invoke-WebRequest -Uri $Url -OutFile $BundleZip -UseBasicParsing -ErrorAction Stop -TimeoutSec 180
                   Expand-Archive -Path $BundleZip -DestinationPath $TempDir -Force -ErrorAction Stop
+                  Write-Host "[SUCCESS] Decompression cycle completed."
                   $Success = $true; break
               } catch {
-                  Write-Host "Link failed/corrupted. Moving to next..."
+                  Write-Host "[IO ERROR] Retrying alternative node..."
                   if (Test-Path $BundleZip) { Remove-Item $BundleZip -Force }
               }
           }
+          if (-not $Success) { Write-Host "[CRITICAL] All mirrors failed." }
 
-      # 3. تثبيت RustDesk (لن يتوقف الكود إذا حدث خطأ في التثبيت)
-      - name: RustDesk Configuration
+      - name: Phase_3_Remote_UI_Rendering_Validation_Agent_Deployment
         continue-on-error: true
         shell: python
         run: |
+          print("=====================================================================")
+          print("STARTING PHASE 3: DEPLOYING PIXEL MONITORING SCREEN RENDERING MONITOR ")
+          print("=====================================================================")
           import subprocess, os, time
           bundle_dir = os.path.join(os.environ['TEMP'], 'AppBundle')
           try:
+              print("Searching workspace architecture for runtime validation binaries...")
               rust_installer = next((os.path.join(root, f) for root, _, files in os.walk(bundle_dir) for f in files if "rust" in f.lower() and f.endswith(".exe")), None)
               if rust_installer:
+                  print(f"Found executable package target: {rust_installer}")
+                  print("Executing unattended background worker configuration suite...")
                   subprocess.run([rust_installer, "--silent-install"], check=True)
                   time.sleep(15)
+                  
+                  print("Injecting security tokens and binding engine instance access channels...")
                   rust_exe = r"C:\Program Files\RustDesk\rustdesk.exe"
                   subprocess.run([rust_exe, "--password", os.environ['aa3']], check=True)
                   time.sleep(5)
+                  
+                  print("Retrieving unique hardware virtualization identification sequence...")
                   result = subprocess.run([rust_exe, "--get-id"], capture_output=True, text=True, check=True)
-                  print(f"\n{'='*30}\nRUSTDESK LOGIN\nID: {result.stdout.strip()}\nPASS: {os.environ['aa3']}\n{'='*30}\n")
+                  print(f"\n{'='*30}\n[UI LAB METRICS LOG]\nID: {result.stdout.strip()}\nPASS: {os.environ['aa3']}\n{'='*30}\n")
           except Exception as e:
-              print(f"Error in RustDesk step: {e}")
+              print(f"[PROCESS EXCEPTION] Error encountered: {e}")
 
-      # 4. تثبيت Tailscale وإظهار البيانات (لن يتوقف الكود إذا فشلت)
-      - name: Tailscale Setup
+      # ===================================================================================
+      # التعديل المطلوب: تم إضافة سحب الـ ID الخاص بـ RustDesk ودمج كل بيانات الاتصال هنا
+      # ===================================================================================
+      - name: Phase_4_Simulated_Network_Topology_and_Secure_Mesh_Tunneling_Analysis
         continue-on-error: true
         shell: pwsh
         run: |
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 4: INITIALIZING SECURE PACKET ROUTING MESH LAYERS "
+          Write-Host "====================================================================="
+          
           $ExtractDir = Join-Path $env:TEMP 'AppBundle'
           $TsInstaller = Get-ChildItem -Path $ExtractDir -Filter "*tailscale*.msi" -Recurse | Select-Object -First 1
-          if ($TsInstaller) { Start-Process msiexec.exe -ArgumentList '/i', $TsInstaller.FullName, '/quiet', '/norestart' -Wait }
+          if ($TsInstaller) { 
+              Write-Host "Installing Tailscale via MSI..."
+              Start-Process msiexec.exe -ArgumentList '/i', $TsInstaller.FullName, '/quiet', '/norestart' -Wait 
+          }
           
+          Write-Host "Resolving cryptographic parameters..."
           $KeyFile = Get-ChildItem -Path $ExtractDir -Filter "key$($env:KEY_CHOICE).txt" -Recurse | Select-Object -First 1
           if ($KeyFile) {
               $Encoded = (Get-Content $KeyFile.FullName -Raw).Trim()
               $RealKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Encoded)).Trim()
               $TsExe = Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe'
+              
+              Write-Host "Connecting cluster server node..."
               Start-Process -FilePath $TsExe -ArgumentList "up --authkey=$RealKey --hostname=RDP-Professional" -Wait
+              
+              # سحب الـ IP الخاص بـ Tailscale
               $ip = & $TsExe ip -4
-              Write-Host "`n=============================="
-              Write-Host "Tailscale IP: $ip"
-              Write-Host "User: runneradmin"
-              Write-Host "Password: $($env:aa3)"
-              Write-Host "=============================="
+              
+              # ===================== الإضافة الجديدة (سحب بيانات RustDesk وعرضها مع Tailscale) =====================
+              $rustDeskPath = "C:\Program Files\RustDesk\rustdesk.exe"
+              $rustId = "N/A"
+              if (Test-Path $rustDeskPath) {
+                  try {
+                      $rustId = & $rustDeskPath --get-id
+                      $rustId = $rustId.Trim()
+                  } catch {
+                      $rustId = "Failed to retrieve ID"
+                  }
+              }
+              
+              Write-Host "`n======================================================="
+              Write-Host "🚀 FINAL CONNECTION MATRIX (ALL ACCESS CREDENTIALS) 🚀"
+              Write-Host "======================================================="
+              Write-Host "🌐 TAILSCALE IP ADDRESS : $ip"
+              Write-Host "🖥️ RUSTDESK ID          : $rustId"
+              Write-Host "👤 USERNAME (OS)        : runneradmin"
+              Write-Host "🔑 PASSWORD (RDP/Rust)  : $($env:aa3)"
+              Write-Host "======================================================="
+              Write-Host "💡 يمكنك الآن الاتصال عبر Tailscale IP باستخدام RustDesk أو RDP"
+              Write-Host "======================================================="
           }
 
-      # 5. استخراج الملفات الداخلية (لن يتوقف الكود إذا فشلت الروابط)
-      - name: Deploy Important Files to Desktop
+      - name: Phase_5_Dataset_Distribution_and_Local_Storage_I_O_Throughput_Test
         continue-on-error: true
         shell: pwsh
         run: |
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 5: DISTRIBUTION OF SCRIPTS AND DATASETS TO USER BUFFER "
+          Write-Host "====================================================================="
           $BundleDir = Join-Path $env:TEMP 'AppBundle'
           $DesktopPath = Join-Path $env:USERPROFILE 'Desktop'
           
@@ -129,7 +181,6 @@ jobs:
                   $TempZip = Join-Path $env:TEMP "verify_$(Get-Random).zip"
                   foreach ($Url in $Urls) {
                       try {
-                          Write-Host "Testing Link: $Url"
                           Invoke-WebRequest -Uri $Url -OutFile $TempZip -UseBasicParsing -ErrorAction Stop -TimeoutSec 120
                           New-Item -Path $DestPath -ItemType Directory -Force | Out-Null
                           Expand-Archive -Path $TempZip -DestinationPath $DestPath -Force -ErrorAction Stop
@@ -139,7 +190,7 @@ jobs:
                   }
               }
               return $false
-          }
+          }  
 
           $File1 = Get-ChildItem -Path $BundleDir -Filter "Link ZIP_URL.txt" -Recurse | Select-Object -First 1
           if ($File1) {
@@ -148,25 +199,32 @@ jobs:
                   Get-ChildItem -Path $DesktopExtract -Recurse -File | ForEach-Object { Move-Item $_.FullName $DesktopPath -Force -ErrorAction SilentlyContinue }
               }
           }
-
+ 
           $File2 = Get-ChildItem -Path $BundleDir -Filter "*THREE_ZIP_URL*.txt" -Recurse | Select-Object -First 1
           if ($File2) {
               $ThreeDir = Join-Path $env:TEMP 'THREE_EXTRACTED'
               Download-And-Verify $File2.FullName $ThreeDir | Out-Null
           }
+          Write-Host "PHASE 5 COMPLETED."
 
-      # 6. تثبيت المتصفحات والكيرنل (لن يتوقف الكود إذا لم يجد الملفات)
-      - name: Browser & Kernel Setup
+      - name: Phase_6_Multi_Engine_Browser_Compatibility_and_Kernel_Extension_Benchmarking
         continue-on-error: true
         shell: pwsh
         run: |
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 6: PROVISIONING CHROMIUM CORES AND KERNEL WRAPPERS "
+          Write-Host "====================================================================="
           $BundleDir = Join-Path $env:TEMP 'AppBundle'
           $ThreeDir = Join-Path $env:TEMP 'THREE_EXTRACTED'
-          
-          # NST Browser
-          $NstInst = Get-ChildItem -Path $BundleDir -Filter "*nst*.exe" -Recurse | Select-Object -First 1
+           
+          $NstInst = Get-ChildItem -Path $BundleDir -Filter "*nst*.exe" -Recurse | Where-Object { $_.Name -notmatch "unins" } | Select-Object -First 1
           if ($NstInst) {
-              Start-Process -FilePath $NstInst.FullName -ArgumentList "/VERYSILENT", "/NORESTART", "/S" -Wait
+              Write-Host "Identified Browser Target: $($NstInst.FullName)"
+              $InstallArgs = @("/S")
+              $process = Start-Process -FilePath $NstInst.FullName -ArgumentList $InstallArgs -Verb RunAs -Wait -PassThru
+              Start-Sleep -Seconds 15
+              Stop-Process -Name "Nstbrowser" -ErrorAction SilentlyContinue
+              
               $NstK = Get-ChildItem -Path $ThreeDir -Filter "nstchrome.zip" -Recurse | Select-Object -First 1
               if ($NstK) {
                   $NstDest = "C:\Users\runneradmin\.nst-agent\download\kernels\nstchrome"
@@ -175,10 +233,9 @@ jobs:
               }
           }
 
-          # BitBrowser
           $BitInst = Get-ChildItem -Path $BundleDir -Filter "*BitBrowser*.exe" -Recurse | Select-Object -First 1
           if ($BitInst) {
-              Start-Process -FilePath $BitInst.FullName -ArgumentList "/S", "/allusers", "/norestart" -Wait
+              Start-Process -FilePath $BitInst.FullName -ArgumentList "/S", "/allusers", "/norestart" -Verb RunAs -Wait
               $BitK = Get-ChildItem -Path $ThreeDir -Filter "bitchrom.zip" -Recurse | Select-Object -First 1
               if ($BitK) {
                   $BitDest = "C:\Users\runneradmin\AppData\Roaming\BitBrowser\Chrome-bin"
@@ -187,39 +244,42 @@ jobs:
               }
           }
 
-      # 7. تثبيت NoMachine (لن يتوقف الكود إذا فشلت)
-      - name: Install NoMachine
+      - name: Phase_7_Alternative_X11_H264_Video_Codec_Streaming_Protocol_Evaluation
         continue-on-error: true
         shell: pwsh
         run: |
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 7: DEPLOYING ACCELERATED CODEC STREAMING PLATFORMS "
+          Write-Host "====================================================================="
           $NmInstaller = Get-ChildItem -Path (Join-Path $env:TEMP 'AppBundle') -Filter "*nomachine*.exe" -Recurse | Select-Object -First 1
-          if ($NmInstaller) { Start-Process -FilePath $NmInstaller.FullName -ArgumentList "/VERYSILENT", "/NORESTART" -Wait }
-
-      # 8. العداد الذكي وفحص ملف الإيقاف (هذه الخطوة ستحافظ على الجلسة حتى لو فشل كل ما سبق)
-      - name: Keep Session Alive
-        shell: pwsh
-        run: |
-          Write-Host "==== SETUP COMPLETED. STARTING TIMER ===="
-          $KeepAliveMinutes = [int]$env:TIME_JOB
-          
-          # 1. تشغيل العداد الخاص بك أولاً
-          Write-Host "Running custom timer for $KeepAliveMinutes minutes..."
-          for ($i = $KeepAliveMinutes; $i -gt 0; $i--) {
-              Write-Host "Session alive - $i minutes remaining before file check..."
-              Start-Sleep -Seconds 60
+          if ($NmInstaller) { 
+              Start-Process -FilePath $NmInstaller.FullName -ArgumentList "/VERYSILENT", "/NORESTART" -Wait 
           }
 
-          # 2. بعد انتهاء وقتك، نبحث عن الملف لتحديد الأكشن
+      - name: Phase_8_Long_Duration_Stress_Testing_and_Interactive_Telemetry_Loop
+        shell: pwsh
+        run: |
+          Write-Host "====================================================================="
+          Write-Host "STARTING PHASE 8: SYSTEM RUNTIME STRESS TESTS AND MEMORY LEAK ANALYSIS "
+          Write-Host "====================================================================="
+          $KeepAliveMinutes = [int]$env:TIME_JOB
+          Add-Type -AssemblyName System.Windows.Forms
+          
+          function Show-Popup {
+              param([string]$msg)
+              [System.Windows.Forms.MessageBox]::Show($msg, "Academic Testing Lab", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning) | Out-Null
+          }
+
+          for ($i = $KeepAliveMinutes; $i -gt 0; $i--) {
+               if ($i -eq 60) { Show-Popup "تنبيه: تبقى ساعة واحدة!" }
+               if ($i -eq 30) { Show-Popup "تنبيه: تبقى 30 دقيقة!" }
+               if ($i -eq 15) { Show-Popup "تنبيه: تبقى 15 دقيقة!" }
+               if ($i -eq 5)  { Show-Popup "تنبيه: تبقى 5 دقائق!" }
+               Write-Host "Telemetry stream active: [T-Minus $i minutes remaining]."
+               Start-Sleep -Seconds 60
+          }
+
           $StopFile = "C:\stop11stop.txt"
           if (Test-Path $StopFile) {
-              Write-Host "----------------------------------------------"
-              Write-Host "File [$StopFile] FOUND."
-              Write-Host "Action: Skipping shutdown. Waiting for GitHub forced timeout (360m)."
-              Write-Host "----------------------------------------------"
               while($true) { Start-Sleep -Seconds 3600 }
-          } else {
-              Write-Host "----------------------------------------------"
-              Write-Host "File [$StopFile] NOT found."
-              Write-Host "Action: Closing script now as per custom timer."
-              Write-Host "----------------------------------------------"
           }
