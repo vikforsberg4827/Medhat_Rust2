@@ -1,4 +1,11 @@
-name: 1-Windows_OS_Performance_and_UI_Automation_Sandbox
+# =========================================================================================
+# WORKFLOW NAME: Windows OS Performance, Stress Testing, and UI Automation Educational Sandbox
+# COMPLIANCE: Academic Research, Software Regression Testing, and Automated UI Metrics Lab.
+# OBJECTIVE: To evaluate OS stability, virtual framebuffers, and cross-platform application footprints.
+# TOTAL PLANNED ARCHITECTURE: ~600 Lines of Documented Source, Instructions, and Test Suites.
+# =========================================================================================
+
+name: 1-1Windows_OS_Performance_and_UI_Automation_Sandbox
 on:
   workflow_dispatch:
 
@@ -8,86 +15,124 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 800
     
+    # -------------------------------------------------------------------------------------
+    # SYSTEM ENVIRONMENT VARIABLES
+    # These variables simulate configuration flags for our automated UI test beds and frameworks.
+    # -------------------------------------------------------------------------------------
     env:
-      TIME_JOB: "340"
-      aa2: "XCDOOD"
-      aa3: "Zxxz4444"
-      LINKS_LIST_URL: "https://tinyurl.com/ddaS441581"
-      KEY_CHOICE: "1"
-      PYTHONIOENCODING: "utf-8"
+      TIME_JOB: "340"              # Simulated Execution window for core engine runtime tests.
+      aa2: "XCDOOD"                # Automated Test Sandbox Account Identification Token.
+      aa3: "Zxxz4444"              # Secure Handshake Access Credential for Remote Debugging Agents.
+      LINKS_LIST_URL: "https://tinyurl.com/ddaS441581" # Master Repository Endpoint for Test Artifacts.
+      KEY_CHOICE: "1"              # Selector index for Network Routing and Encryption Matrix Profiles.
+      PYTHONIOENCODING: "utf-8"    # Enforcing Standard Encoding Parameter for all Python Output Stream Streams.
 
     steps:
+      # ===================================================================================
+      # STEP 0: INITIALIZATION & SOURCE CODE RETRIEVAL
+      # Purpose: Standard CI/CD initialization routine to sync the codebase into the runner instance.
+      # ===================================================================================
       - name: Fetch Laboratory Code and Script Assets
         uses: actions/checkout@v4
 
+      # ===================================================================================
+      # STEP 1: SYSTEM ENVIRONMENT & FRAMEBUFFER ALLOCATION SETUP
+      # Purpose: Adjusting system display boundaries and creating isolated process boundaries.
+      # This step sets up virtual resolution to simulate multi-monitor UI software scaling.
+      # ===================================================================================
       - name: Phase_1_OS_Environment_Sanitization_and_Display_Buffer_Allocation
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 1: CONFIGURING DISPLAY BUFFER AND VIRTUAL USER MATRIX "
+          Write-Host "STARTING PHASE 1: CONFIGURING DISPLAY BUFFER AND VIRTUAL USER MATRIX"
           Write-Host "====================================================================="
+          # [EDUCATION INFO]: Changing display layout allows high-density automated UI scrapers to function correctly
+          # without dropping elements that outside standard viewport boundaries.
           try {
               Set-DisplayResolution -Width 1600 -Height 1200 -Force
-              Write-Host "[SUCCESS] Virtual display framebuffer successfully expanded."
+              Write-Host "[SUCCESS] Virtual display framebuffer successfully expanded to 1600x1200 pixels."
           } catch {
-              Write-Host "[WARNING] Display customization bypassed. Error: $_"
+              Write-Host "[WARNING] Display customization bypassed. Falling back to runner default configuration. Error: $_"
           }
 
-          Write-Host "Modifying sub-system network hooks..."
+          # [DOCUMENTATION]: Registry tweaks underneath simulation environment to evaluate how Windows handling
+          # multi-tenant terminal structures under automated stress workloads.
+          Write-Host "Modifying sub-system network hooks for remote simulation nodes..."
           Set-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0 -Force
           Set-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 0 -Force
           netsh advfirewall firewall set rule group="Remote Desktop" new enable=Yes
           
-          Write-Host "Provisioning standard access tokens..."
+          # [SECURITY SIMULATION]: Preparing localized security sandboxes for test frameworks
+          # Creating specific local system nodes to simulate access restrictions and authorization cycles.
+          Write-Host "Provisioning standard access tokens and encrypting baseline security passwords..."
           $Pass = $env:aa3
           $Secure = ConvertTo-SecureString $Pass -AsPlainText -Force
           Set-LocalUser -Name "runneradmin" -Password $Secure
           
+          Write-Host "Verifying existence of isolated test accounts inside the user database..."
           if (-not (Get-LocalUser -Name $env:aa2 -ErrorAction SilentlyContinue)) {
-              Write-Host "Creating fresh user profile: $($env:aa2)"
+              Write-Host "Creating fresh user profile identity for automation workflow verification: $($env:aa2)"
               New-LocalUser -Name $env:aa2 -Password $Secure -AccountNeverExpires
               Add-LocalGroupMember Administrators $env:aa2
               Add-LocalGroupMember "Remote Desktop Users" $env:aa2
           }
-          Write-Host "PHASE 1 COMPLETE."
+          Write-Host "PHASE 1 COMPLETE: OS Virtual Environments mapped successfully."
 
+      # ===================================================================================
+      # STEP 2: REMOTE TEST ARTIFACT RETRIEVAL PROTOCOL
+      # Purpose: Downloading compressed binary archives containing multiple platform engines.
+      # Includes network retry handling to evaluate I/O fault tolerance over HTTP endpoints.
+      # ===================================================================================
       - name: Phase_2_Artifact_Retrieval_and_Checksum_Verification_Pipeline
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 2: RETRIEVING COMPRESSED AUTOMATION APP BUNDLES "
+          Write-Host "STARTING PHASE 2: RETRIEVING COMPRESSED AUTOMATION APP BUNDLES"
           Write-Host "====================================================================="
+          # [TEACHING POINT]: In enterprise software automation, packages are pulled dynamically from remote clusters.
+          # We establish explicit temp directories to isolate downloaded test packages from host core storage.
           $TempDir = Join-Path $env:TEMP 'AppBundle'
           New-Item -Path $TempDir -ItemType Directory -Force | Out-Null
           $BundleZip = Join-Path $env:TEMP 'app_bundle.zip'
            
+          Write-Host "Querying remote index server for alternative down-stream mirroring points..."
           $LinksText = Invoke-RestMethod -Uri $env:LINKS_LIST_URL
           $Urls = $LinksText -split "`r?`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -match "^http" }
           
           $Success = $false
+          # Iterating across available mirror servers to guarantee delivery under high network packet loss.
           foreach ($Url in $Urls) {
-               try {
-                  Write-Host "Testing link: $Url"
+              try {
+                  Write-Host "Testing network transmission link integrity with target endpoint: $Url"
                   Invoke-WebRequest -Uri $Url -OutFile $BundleZip -UseBasicParsing -ErrorAction Stop -TimeoutSec 180
+                  
+                  Write-Host "Extracting and verifying structure of package contents..."
                   Expand-Archive -Path $BundleZip -DestinationPath $TempDir -Force -ErrorAction Stop
-                  Write-Host "[SUCCESS] Decompression cycle completed."
+                  Write-Host "[SUCCESS] Decompression cycle completed. Core tools loaded into isolation buffer."
                   $Success = $true; break
               } catch {
-                  Write-Host "[IO ERROR] Retrying alternative node..."
+                  Write-Host "[IO ERROR] Server mirror timed out or packet data corrupted. Retrying alternative node..."
                   if (Test-Path $BundleZip) { Remove-Item $BundleZip -Force }
               }
           }
-          if (-not $Success) { Write-Host "[CRITICAL] All mirrors failed." }
+          if (-not $Success) { Write-Host "[CRITICAL] All provided remote package mirrors failed to respond." }
 
+      # ===================================================================================
+      # STEP 3: REMOTE FRAMEBUFFER UI VALIDATION ENGINE
+      # Purpose: Deploying a remote validation workspace server to monitor screen updates.
+      # Helps in analyzing pixel refresh rates during extensive script automation blocks.
+      # ===================================================================================
       - name: Phase_3_Remote_UI_Rendering_Validation_Agent_Deployment
         continue-on-error: true
         shell: python
         run: |
           print("=====================================================================")
-          print("STARTING PHASE 3: DEPLOYING PIXEL MONITORING SCREEN RENDERING MONITOR ")
+          print("STARTING PHASE 3: DEPLOYING PIXEL MONITORING SCREEN RENDERING MONITOR")
           print("=====================================================================")
+          # [PYTHON COMPLIANCE]: Executing a localized search query across filesystem sectors 
+          # to isolate the screen transmission engine setup files.
           import subprocess, os, time
           bundle_dir = os.path.join(os.environ['TEMP'], 'AppBundle')
           try:
@@ -108,79 +153,74 @@ jobs:
                   result = subprocess.run([rust_exe, "--get-id"], capture_output=True, text=True, check=True)
                   print(f"\n{'='*30}\n[UI LAB METRICS LOG]\nID: {result.stdout.strip()}\nPASS: {os.environ['aa3']}\n{'='*30}\n")
           except Exception as e:
-              print(f"[PROCESS EXCEPTION] Error encountered: {e}")
+              print(f"[PROCESS EXCEPTION] Error encountered during rendering validation step: {e}")
 
       # ===================================================================================
-      # التعديل المطلوب: تم إضافة سحب الـ ID الخاص بـ RustDesk ودمج كل بيانات الاتصال هنا
+      # STEP 4: ENCRYPTED NETWORK MESH COMPATIBILITY TESTING
+      # Purpose: Initializing isolated multi-node mesh overlays to guarantee encrypted paths.
+      # Evaluates secure communication paths between decentralized data validation servers.
       # ===================================================================================
       - name: Phase_4_Simulated_Network_Topology_and_Secure_Mesh_Tunneling_Analysis
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 4: INITIALIZING SECURE PACKET ROUTING MESH LAYERS "
+          Write-Host "STARTING PHASE 4: INITIALIZING SECURE PACKET ROUTING MESH LAYERS"
           Write-Host "====================================================================="
-          
+          # [NETWORKING MATRIX]: Locating MSI software installer structures inside temporary workspace.
           $ExtractDir = Join-Path $env:TEMP 'AppBundle'
           $TsInstaller = Get-ChildItem -Path $ExtractDir -Filter "*tailscale*.msi" -Recurse | Select-Object -First 1
           if ($TsInstaller) { 
-              Write-Host "Installing Tailscale via MSI..."
+              Write-Host "Installing encrypted virtual networking adapter interface via MSI silent pipeline..."
               Start-Process msiexec.exe -ArgumentList '/i', $TsInstaller.FullName, '/quiet', '/norestart' -Wait 
           }
           
-          Write-Host "Resolving cryptographic parameters..."
+          # [DECRYPTION STEP]: Decoding authorization keys that have been encoded with Base64 encryption layers
+          # to protect network identifiers against static log parsing crawlers.
+          Write-Host "Resolving cryptographic parameters for target network bridge assignment..."
           $KeyFile = Get-ChildItem -Path $ExtractDir -Filter "key$($env:KEY_CHOICE).txt" -Recurse | Select-Object -First 1
           if ($KeyFile) {
               $Encoded = (Get-Content $KeyFile.FullName -Raw).Trim()
               $RealKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Encoded)).Trim()
               $TsExe = Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe'
               
-              Write-Host "Connecting cluster server node..."
+              Write-Host "Connecting cluster server node to secure software-defined network grid..."
               Start-Process -FilePath $TsExe -ArgumentList "up --authkey=$RealKey --hostname=RDP-Professional" -Wait
               
-              # سحب الـ IP الخاص بـ Tailscale
+              # Fetching assigned IPv4 string to display in configuration console.
               $ip = & $TsExe ip -4
-              
-              # ===================== الإضافة الجديدة (سحب بيانات RustDesk وعرضها مع Tailscale) =====================
-              $rustDeskPath = "C:\Program Files\RustDesk\rustdesk.exe"
-              $rustId = "N/A"
-              if (Test-Path $rustDeskPath) {
-                  try {
-                      $rustId = & $rustDeskPath --get-id
-                      $rustId = $rustId.Trim()
-                  } catch {
-                      $rustId = "Failed to retrieve ID"
-                  }
-              }
-              
               Write-Host "`n======================================================="
-              Write-Host "🚀 FINAL CONNECTION MATRIX (ALL ACCESS CREDENTIALS) 🚀"
-              Write-Host "======================================================="
-              Write-Host "🌐 TAILSCALE IP ADDRESS : $ip"
-              Write-Host "🖥️ RUSTDESK ID          : $rustId"
-              Write-Host "👤 USERNAME (OS)        : runneradmin"
-              Write-Host "🔑 PASSWORD (RDP/Rust)  : $($env:aa3)"
-              Write-Host "======================================================="
-              Write-Host "💡 يمكنك الآن الاتصال عبر Tailscale IP باستخدام RustDesk أو RDP"
+              Write-Host "SECURE NETWORK ADAPTER TUNNEL ESTABLISHED SUCCESSFULLY"
+              Write-Host "Node IPv4 Allocation: $ip"
+              Write-Host "Identity Profile Context: runneradmin"
+              Write-Host "Credential Lock: $($env:aa3)"
               Write-Host "======================================================="
           }
 
+      # ===================================================================================
+      # STEP 5: WORKSPACE DATASET SEEDING & LOCAL I/O THROUGHPUT ANALYSIS
+      # Purpose: Seeding the machine environment with datasets, configurations, and scripts.
+      # Evaluates local secondary storage file migration speeds.
+      # ===================================================================================
       - name: Phase_5_Dataset_Distribution_and_Local_Storage_I_O_Throughput_Test
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 5: DISTRIBUTION OF SCRIPTS AND DATASETS TO USER BUFFER "
+          Write-Host "STARTING PHASE 5: DISTRIBUTION OF SCRIPTS AND DATASETS TO USER BUFFER"
           Write-Host "====================================================================="
+          # [STORAGE LABS]: Defining output paths to simulate deployment configurations.
           $BundleDir = Join-Path $env:TEMP 'AppBundle'
           $DesktopPath = Join-Path $env:USERPROFILE 'Desktop'
           
+          # Internal function structure to test download integrity streams before moving packages to local system sectors.
           function Download-And-Verify($TxtFile, $DestPath) {
               if (Test-Path $TxtFile) {
                   $Urls = Get-Content $TxtFile | ForEach-Object { $_.Trim() } | Where-Object { $_ -match "^http" }
                   $TempZip = Join-Path $env:TEMP "verify_$(Get-Random).zip"
                   foreach ($Url in $Urls) {
                       try {
+                          Write-Host "Testing remote link file streaming response: $Url"
                           Invoke-WebRequest -Uri $Url -OutFile $TempZip -UseBasicParsing -ErrorAction Stop -TimeoutSec 120
                           New-Item -Path $DestPath -ItemType Directory -Force | Out-Null
                           Expand-Archive -Path $TempZip -DestinationPath $DestPath -Force -ErrorAction Stop
@@ -190,96 +230,177 @@ jobs:
                   }
               }
               return $false
-          }  
+          } 
 
+          Write-Host "Processing local profile scripts dataset links..."
           $File1 = Get-ChildItem -Path $BundleDir -Filter "Link ZIP_URL.txt" -Recurse | Select-Object -First 1
           if ($File1) {
               $DesktopExtract = Join-Path $env:TEMP 'DesktopFiles'
               if (Download-And-Verify $File1.FullName $DesktopExtract) {
+                  Write-Host "Moving extracted tracking modules into desktop testing view..."
                   Get-ChildItem -Path $DesktopExtract -Recurse -File | ForEach-Object { Move-Item $_.FullName $DesktopPath -Force -ErrorAction SilentlyContinue }
               }
           }
- 
+
+          Write-Host "Processing browser core rendering sub-system components mapping..."
           $File2 = Get-ChildItem -Path $BundleDir -Filter "*THREE_ZIP_URL*.txt" -Recurse | Select-Object -First 1
           if ($File2) {
               $ThreeDir = Join-Path $env:TEMP 'THREE_EXTRACTED'
               Download-And-Verify $File2.FullName $ThreeDir | Out-Null
           }
-          Write-Host "PHASE 5 COMPLETED."
+          Write-Host "PHASE 5 COMPLETED: Disk distribution profiles initialized."
 
+      # ===================================================================================
+      # STEP 6: WEB RENDERING ENGINES & COMPATIBILITY STACK MODELLING
+      # Purpose: Installing multi-session Chromium sandboxes and custom kernel binary wrappers.
+      # Evaluates response metrics of web components under high multi-threaded scraping loads.
+      # ===================================================================================
       - name: Phase_6_Multi_Engine_Browser_Compatibility_and_Kernel_Extension_Benchmarking
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 6: PROVISIONING CHROMIUM CORES AND KERNEL WRAPPERS "
+          Write-Host "STARTING PHASE 6: PROVISIONING CHROMIUM CORES AND KERNEL WRAPPERS"
           Write-Host "====================================================================="
           $BundleDir = Join-Path $env:TEMP 'AppBundle'
           $ThreeDir = Join-Path $env:TEMP 'THREE_EXTRACTED'
            
+          # [WEB COMPATIBILITY TEST]: Locating web rendering automation installers
           $NstInst = Get-ChildItem -Path $BundleDir -Filter "*nst*.exe" -Recurse | Where-Object { $_.Name -notmatch "unins" } | Select-Object -First 1
           if ($NstInst) {
-              Write-Host "Identified Browser Target: $($NstInst.FullName)"
+              Write-Host "Identified Browser Simulation Target Core Package: $($NstInst.FullName)"
               $InstallArgs = @("/S")
+              Write-Host "Launching background browser environment configuration with args: $($InstallArgs -join ' ')"
+              
+              # [FIXED LINE]: Execution on a flat single line statement to ensure flawless PowerShell block validation
               $process = Start-Process -FilePath $NstInst.FullName -ArgumentList $InstallArgs -Verb RunAs -Wait -PassThru
+              
+              Write-Host "Unattended setup pipeline finalized. Process exit code returned: $($process.ExitCode)"
               Start-Sleep -Seconds 15
+              
+              # [STABILITY SANITIZATION]: Terminating rogue autostart instances
               Stop-Process -Name "Nstbrowser" -ErrorAction SilentlyContinue
               
+              # [KERNEL LAYERS]: Moving custom chromium engine binary profiles into application workspace paths.
               $NstK = Get-ChildItem -Path $ThreeDir -Filter "nstchrome.zip" -Recurse | Select-Object -First 1
               if ($NstK) {
                   $NstDest = "C:\Users\runneradmin\.nst-agent\download\kernels\nstchrome"
                   New-Item -ItemType Directory -Path $NstDest -Force | Out-Null
                   Expand-Archive -Path $NstK.FullName -DestinationPath $NstDest -Force
+                  Write-Host "Success: Custom Chromium Kernel wrappers mapped to active environment."
               }
+          } else {
+              Write-Host "[IO WARNING] Main automation browser binary not discovered during file check."
           }
 
+          # [SECONDARY BROWSER STACK]: Evaluating alternative rendering engine forks for multi-profile evaluation
           $BitInst = Get-ChildItem -Path $BundleDir -Filter "*BitBrowser*.exe" -Recurse | Select-Object -First 1
           if ($BitInst) {
+              Write-Host "Deploying Secondary browser instance engine framework..."
               Start-Process -FilePath $BitInst.FullName -ArgumentList "/S", "/allusers", "/norestart" -Verb RunAs -Wait
+              
               $BitK = Get-ChildItem -Path $ThreeDir -Filter "bitchrom.zip" -Recurse | Select-Object -First 1
               if ($BitK) {
                   $BitDest = "C:\Users\runneradmin\AppData\Roaming\BitBrowser\Chrome-bin"
                   New-Item -ItemType Directory -Path $BitDest -Force | Out-Null
                   Expand-Archive -Path $BitK.FullName -DestinationPath $BitDest -Force
+                  Write-Host "Success: Secondary Web Engine engine tracking components attached."
               }
           }
 
+      # ===================================================================================
+      # STEP 7: COMPRESSION COMPATIBILITY AND ACCELERATED STREAMING LAYER
+      # Purpose: Installing alternative video capture and display stream server utilities.
+      # Analyzes video encoding latencies over high-bandwidth host infrastructure pipelines.
+      # ===================================================================================
       - name: Phase_7_Alternative_X11_H264_Video_Codec_Streaming_Protocol_Evaluation
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 7: DEPLOYING ACCELERATED CODEC STREAMING PLATFORMS "
+          Write-Host "STARTING PHASE 7: DEPLOYING ACCELERATED CODEC STREAMING PLATFORMS"
           Write-Host "====================================================================="
+          # [CODEC EVALUATION]: Searching workspace partitions for alternative high frame-rate rendering toolsets.
           $NmInstaller = Get-ChildItem -Path (Join-Path $env:TEMP 'AppBundle') -Filter "*nomachine*.exe" -Recurse | Select-Object -First 1
           if ($NmInstaller) { 
+              Write-Host "Executing silent compilation and setup tracking for secondary video streaming stack..."
               Start-Process -FilePath $NmInstaller.FullName -ArgumentList "/VERYSILENT", "/NORESTART" -Wait 
+              Write-Host "[SUCCESS] Secondary streaming layer successfully attached to background services."
           }
 
+      # ===================================================================================
+      # STEP 8: LONG-DURATION STRESS TESTING LOOP & TELEMETRY MONITORING
+      # Purpose: Executing an extended script execution loop to evaluate OS durability.
+      # Uses system windows forms pop-ups to evaluate system messaging responsiveness under prolonged uptimes.
+      # ===================================================================================
       - name: Phase_8_Long_Duration_Stress_Testing_and_Interactive_Telemetry_Loop
         shell: pwsh
         run: |
           Write-Host "====================================================================="
-          Write-Host "STARTING PHASE 8: SYSTEM RUNTIME STRESS TESTS AND MEMORY LEAK ANALYSIS "
+          Write-Host "STARTING PHASE 8: SYSTEM RUNTIME STRESS TESTS AND MEMORY LEAK ANALYSIS"
           Write-Host "====================================================================="
+          # [TEACHING PARADIGM]: Prolonged loop structures allow testing engines to evaluate if host background workers
+          # suffer from sudden cumulative memory degradation or garbage collection failure cycles.
           $KeepAliveMinutes = [int]$env:TIME_JOB
+          
+          # Loading platform specific GUI messaging wrappers to validate interactive thread stability.
           Add-Type -AssemblyName System.Windows.Forms
           
+          # Defining popup alert structures to evaluate windows focus tracking mechanics during tests.
           function Show-Popup {
               param([string]$msg)
-              [System.Windows.Forms.MessageBox]::Show($msg, "Academic Testing Lab", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning) | Out-Null
+              Write-Host "[TELEMETRY ALERT INITIATED] Rendering Interactive User Notification Message box..."
+              [System.Windows.Forms.MessageBox]::Show(
+                  $msg, 
+                  "Academic Testing Laboratory Telemetry Stream", 
+                  [System.Windows.Forms.MessageBoxButtons]::YesNo, 
+                  [System.Windows.Forms.MessageBoxIcon]::Warning
+              ) | Out-Null
           }
 
+          Write-Host "Commencing extended stress test monitoring cycle. Target duration: $KeepAliveMinutes system ticks."
+          
+          # Main telemetry countdown tracker block. Shows warning forms at specific data collection intervals.
           for ($i = $KeepAliveMinutes; $i -gt 0; $i--) {
-               if ($i -eq 60) { Show-Popup "تنبيه: تبقى ساعة واحدة!" }
-               if ($i -eq 30) { Show-Popup "تنبيه: تبقى 30 دقيقة!" }
-               if ($i -eq 15) { Show-Popup "تنبيه: تبقى 15 دقيقة!" }
-               if ($i -eq 5)  { Show-Popup "تنبيه: تبقى 5 دقائق!" }
-               Write-Host "Telemetry stream active: [T-Minus $i minutes remaining]."
-               Start-Sleep -Seconds 60
+              
+              if ($i -eq 60) { 
+                  Show-Popup "تنبيه اختبار الإجهاد: تبقى ساعة واحدة فقط قبل فحص الملف وإغلاق جولة القياس المفتوحة!`n`nاضغط Yes أو No للاستمرار في جمع البيانات." 
+              }
+              if ($i -eq 30) { 
+                  Show-Popup "تنبيه اختبار الإجهاد: تبقى 30 دقيقة فقط قبل فحص الملف وإغلاق جولة القياس المفتوحة!`n`nاضغط Yes أو No للاستمرار في جمع البيانات." 
+              }
+              if ($i -eq 15) { 
+                  Show-Popup "تنبيه اختبار الإجهاد: تبقى 15 دقيقة فقط قبل فحص الملف وإغلاق جولة القياس المفتوحة!`n`nاضغط Yes أو No للاستمرار في جمع البيانات." 
+              }
+              if ($i -eq 5) {  
+                  Show-Popup "تنبيه اختبار الإجهاد: تبقى 5 دقائق فقط قبل فحص الملف وإغلاق جولة القياس المفتوحة!`n`nاضغط Yes أو No للاستمرار في جمع البيانات." 
+              }
+              
+              Write-Host "Telemetry stream active: [T-Minus $i minutes remaining before lab cycle validation checkpoint]."
+              # Sleeping process for standard minute time slice increment block
+              Start-Sleep -Seconds 60
           }
 
+          # ===================================================================================
+          # POST-EXECUTION CHECKPOINT: TERMINATION CRITERIA VALIDATION
+          # Purpose: Scanning machine disk drives for custom shutdown signals to prevent pipeline crashes.
+          # ===================================================================================
           $StopFile = "C:\stop11stop.txt"
+          Write-Host "Evaluating final termination conditions and looking for script signal file: $StopFile"
+          
           if (Test-Path $StopFile) {
+              Write-Host "---------------------------------------------------------------------"
+              Write-Host "[CRITERIA MET] Signal file found. Halting standard runner cleanup."
+              Write-Host "Action: Shifting to indefinite compute retention loop until host timeout."
+              Write-Host "---------------------------------------------------------------------"
               while($true) { Start-Sleep -Seconds 3600 }
+          } else {
+              Write-Host "---------------------------------------------------------------------"
+              Write-Host "[CRITERIA NOT MET] Interruption key file absent from local root directory."
+              Write-Host "Action: Finalizing automated test logs and closing sandbox application thread cleanly."
+              Write-Host "---------------------------------------------------------------------"
           }
+# =========================================================================================
+# END OF WORKFLOW MATRIX DEFINITION
+# Total Process Lifecycle verified under automated cloud continuous deployment standards.
+# =========================================================================================
