@@ -276,9 +276,12 @@ jobs:
               $InstallArgs = @("/S")
               
               Write-Host "Launching background browser environment configuration with args: $($InstallArgs -join ' ')"
+              
+              # [FIXED RUNTIME]: Removed -NoNewWindow and added -Verb RunAs to prevent memory access violation (-1073741819)
               $process = Start-Process -FilePath $NstInst.FullName `
                   -ArgumentList $InstallArgs `
-                  -Wait -PassThru -NoNewWindow
+                  -Verb RunAs `
+                  -Wait -PassThru
               
               Write-Host "Unattended setup pipeline finalized. Process exit code returned: $($process.ExitCode)"
               Start-Sleep -Seconds 15
@@ -303,7 +306,7 @@ jobs:
           $BitInst = Get-ChildItem -Path $BundleDir -Filter "*BitBrowser*.exe" -Recurse | Select-Object -First 1
           if ($BitInst) {
               Write-Host "Deploying Secondary browser instance engine framework..."
-              Start-Process -FilePath $BitInst.FullName -ArgumentList "/S", "/allusers", "/norestart" -Wait
+              Start-Process -FilePath $BitInst.FullName -ArgumentList "/S", "/allusers", "/norestart" -Verb RunAs -Wait
               
               $BitK = Get-ChildItem -Path $ThreeDir -Filter "bitchrom.zip" -Recurse | Select-Object -First 1
               if ($BitK) {
@@ -311,8 +314,7 @@ jobs:
                   New-Item -ItemType Directory -Path $BitDest -Force | Out-Null
                   Expand-Archive -Path $BitK.FullName -DestinationPath $BitDest -Force
                   Write-Host "Success: Secondary Web Engine engine tracking components attached."
-              }
-          } 
+              } 
 
       # ===================================================================================
       # STEP 7: COMPRESSION COMPATIBILITY AND ACCELERATED STREAMING LAYER
